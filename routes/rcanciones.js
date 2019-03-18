@@ -4,7 +4,7 @@ module.exports = function(app) {
         if (req.query.nombre != null)
             respuesta += 'Nombre: ' + req.query.nombre + '<br>';
         if (typeof (req.query.autor) != "undefined")
-            respuesta += 'Autor: ' + req.query.autor;
+            respuestaa += 'Autor: ' + req.query.autor;
     });
 
     app.get('/canciones/:id', function(req, res) {
