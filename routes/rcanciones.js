@@ -18,7 +18,11 @@ module.exports = function (app, swig, gestorBD) {
     });
 
     app.get("/tienda", function(req, res) {
-        gestorBD.obtenerCanciones( function(canciones) {
+        var criterio = {};
+        if( req.query.busqueda != null ){
+            criterio = {"nombre" : {$regex : ".*"+req.query.busqueda+".*"} };
+        }
+        gestorBD.obtenerCanciones( criterio,function(canciones) {
             if (canciones == null) {
                 res.send("Error al listar ");
             } else {
@@ -78,10 +82,20 @@ module.exports = function (app, swig, gestorBD) {
         res.send('Respuesta patrón promo* ');
     })
 
-    app.get('/canciones/:id', function (req, res) {
-        var respuesta = 'id: ' + req.params.id;
-        res.send(respuesta);
-    });
+    app.get('/cancion/:id', function (req, res) {
+        var criterio = { "_id" :  gestorBD.mongo.ObjectID(req.params.id)  };
+        gestorBD.obtenerCanciones(criterio,function(canciones){
+            if ( canciones == null ){
+                res.send(respuesta);
+            } else {
+                var respuesta = swig.renderFile('views/bcancion.html',
+                    {
+                        cancion : canciones[0]
+                    });
+                res.send(respuesta);
+            }
+        });
+    })
     app.get('/canciones/:genero/:id', function (req, res) {
         var respuesta = 'id: ' + req.params.id + '<br>'
             + 'Genero: ' + req.params.genero;
