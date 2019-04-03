@@ -17,6 +17,21 @@ module.exports = function (app, swig, gestorBD) {
         res.send(respuesta);
     });
 
+    app.get("/tienda", function(req, res) {
+        gestorBD.obtenerCanciones( function(canciones) {
+            if (canciones == null) {
+                res.send("Error al listar ");
+            } else {
+                var respuesta = swig.renderFile('views/btienda.html',
+                    {
+                        canciones : canciones
+                    });
+                res.send(respuesta);
+            }
+        });
+    });
+
+
     app.get('/canciones/agregar', function (req, res) {
         var respuesta = swig.renderFile('views/bagregar.html', {});
         res.send(respuesta);
@@ -30,11 +45,31 @@ module.exports = function (app, swig, gestorBD) {
         }
 
         // Conectarse
-        gestorBD.insertarCancion(cancion, function(id){
+        gestorBD.insertarCancion(cancion, function (id) {
             if (id == null) {
                 res.send("Error al insertar canción");
             } else {
-                res.send("Agregada la canción ID: " + id);
+                if (req.files.portada != null) {
+                    var imagen = req.files.portada;
+                    imagen.mv('public/portadas/' + id + '.png', function (err) {
+                        if (err) {
+                            res.send("Error al subir la portada");
+                        } else {
+                            if (req.files.audio != null) {
+                                var audio = req.files.audio;
+                                audio.mv('public/audios/'+id+'.mp3', function(err) {
+                                    if (err) {
+                                        res.send("Error al subir el audio");
+                                    } else {
+                                        res.send("Agregada id: "+ id);
+                                    }
+                                });
+                            }
+
+                        }
+                    });
+                }
+
             }
         });
 
