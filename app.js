@@ -44,14 +44,14 @@ routerAudios.use(function (req, res, next) {
     console.log("routerAudios");
     var path = require('path');
     var idCancion = path.basename(req.originalUrl, '.mp3');
-    /*gestorBD.obtenerCanciones(
-        {id: mongo.ObjectID(idCancion)}, function (canciones) {
+    gestorBD.obtenerCanciones(
+        {_id: mongo.ObjectID(idCancion)}, function (canciones) {
             if (req.session.usuario && canciones[0].autor == req.session.usuario) {
                 next();
             } else {
                 res.redirect("/tienda");
             }
-        })*/
+        })
 });
 //Aplicar routerAudios
 app.use("/audios/", routerAudios);
@@ -90,6 +90,9 @@ app.set('crypto', crypto);
 require("./routes/rusuarios.js")(app, swig, gestorBD); // (app, param1, param2, etc.)
 require("./routes/rcanciones.js")(app, swig, gestorBD); // (app, param1, param2, etc.)
 
+app.get('/', function (req, res) {
+    res.redirect('/tienda');
+})
 
 // lanzar el servidor
 app.listen(app.get('port'), function () {
