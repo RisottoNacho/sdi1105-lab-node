@@ -1,4 +1,5 @@
 <div id="widget-canciones">
+    <button class="btn btn-primary" onclick="widgetAgregar()">Nueva Canción</button>
     <button class="btn" onclick="cargarCanciones()">Actualizar</button>
     <table class="table table-hover">
         <thead>
@@ -35,6 +36,9 @@
         });
     }
 
+    function widgetAgregar() {
+        $( "#contenedor-principal" ).load( "widget-agregar.html");
+    }
 
     function eliminar(_id) {
         $.ajax({
