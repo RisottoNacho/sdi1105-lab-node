@@ -40,8 +40,8 @@ routerUsuarioSession.use(function (req, res, next) {
 //Aplicar routerUsuarioSession
 app.use("/canciones/agregar", routerUsuarioSession);
 app.use("/publicaciones", routerUsuarioSession);
-app.use("/cancion/comprar",routerUsuarioSession);
-app.use("/compras",routerUsuarioSession);
+app.use("/cancion/comprar", routerUsuarioSession);
+app.use("/compras", routerUsuarioSession);
 
 
 //routerAudios
@@ -57,12 +57,12 @@ routerAudios.use(function (req, res, next) {
             } else {
                 //res.redirect("/tienda");
                 var criterio = {
-                    usuario : req.session.usuario,
-                    cancionId : mongo.ObjectID(idCancion)
+                    usuario: req.session.usuario,
+                    cancionId: mongo.ObjectID(idCancion)
                 };
 
-                gestorBD.obtenerCompras(criterio ,function(compras){
-                    if (compras != null && compras.length > 0 ){
+                gestorBD.obtenerCompras(criterio, function (compras) {
+                    if (compras != null && compras.length > 0) {
                         next();
                     } else {
                         res.redirect("/tienda");
@@ -107,14 +107,16 @@ app.set('crypto', crypto);
 //Rutas/controladores por lógica
 require("./routes/rusuarios.js")(app, swig, gestorBD); // (app, param1, param2, etc.)
 require("./routes/rcanciones.js")(app, swig, gestorBD); // (app, param1, param2, etc.)
+require("./routes/rapicanciones.js")(app, gestorBD);
+
 
 app.get('/', function (req, res) {
     res.redirect('/tienda');
 });
 
-app.use( function (err, req, res, next ) {
+app.use(function (err, req, res, next) {
     console.log("Error producido: " + err); //we log the error in our db
-    if (! res.headersSent) {
+    if (!res.headersSent) {
         res.status(400);
         res.send("Recurso no disponible");
     }
@@ -125,7 +127,7 @@ app.use( function (err, req, res, next ) {
 https.createServer({
     key: fs.readFileSync('certificates/alice.key'),
     cert: fs.readFileSync('certificates/alice.crt')
-}, app).listen(app.get('port'), function() {
+}, app).listen(app.get('port'), function () {
     console.log("Servidor activo");
 });
 
