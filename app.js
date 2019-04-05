@@ -3,6 +3,9 @@ var express = require('express');
 var app = express();
 var crypto = require('crypto');
 
+var rest = require('request');
+app.set('rest', rest);
+
 var jwt = require('jsonwebtoken');
 app.set('jwt', jwt);
 
